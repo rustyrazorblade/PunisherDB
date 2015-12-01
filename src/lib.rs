@@ -15,6 +15,7 @@ impl Item {
     pub fn new() -> Item {
         Item{ versions: BTreeMap::new(), current: 0 }
     }
+
     pub fn get(&self) -> Option<&Version> {
         // returns the latest committed version
         if self.current > 0 {
@@ -23,17 +24,20 @@ impl Item {
         }
         None
     }
+
     pub fn insert(&mut self, value: String,
                   dependencies: Vec<String>,
                   timestamp: i64) {
         let v = Version{value: value, dependencies: dependencies};
         self.versions.insert(timestamp, v);
     }
+
     pub fn commit(&mut self, timestamp: i64) {
         if timestamp > self.current {
             self.current = timestamp;
         }
     }
+
     pub fn get_version(&self, timestamp: i64) -> Option<&Version> {
         if let Some(version) = self.versions.get(&self.current) {
             return Some(version);
@@ -80,7 +84,7 @@ impl Database {
         Database{items:x, open_transactions: t}
     }
 
-    pub fn propose(&mut self, key: String, value: String,
+    pub fn prepare(&mut self, key: String, value: String,
                    dependencies: Vec<String>, timestamp: i64) {
 
         // set up a Transaction instance if it doesn't exist
@@ -129,7 +133,7 @@ impl Database {
 
     pub fn get(&self, key: String) -> Option<&Version> {
         // returns latest committed Version
-        // returns None if value has just been proposed
+        // returns None if value has just been prepared
         if let Some(x) = self.items.get(&key) {
             if x.current > 0 {
                 return x.versions.get(&x.current);
@@ -158,7 +162,7 @@ fn deps() -> Vec<String> {
 fn test_commit_flow() {
     let mut db = Database::new();
     assert_eq!(false, db.exists("test".to_string()));
-    db.propose("test".to_string(), "value".to_string(), deps(), 1);
+    db.prepare("test".to_string(), "value".to_string(), deps(), 1);
     // we should have a new open transaction
     assert_eq!(1, db.open_transaction_count());
     assert_eq!(true, db.exists("test".to_string()));

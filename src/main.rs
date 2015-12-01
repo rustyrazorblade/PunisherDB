@@ -19,7 +19,7 @@ pub mod ramp_capnp {
 }
 use ramp_capnp::ramp_interface;
 
-type DB = Arc<RwLock<Database>>;
+type DB = RwLock<Database>;
 
 struct RampServer {
     db:DB
@@ -29,7 +29,7 @@ struct RampServer {
 impl RampServer {
     fn new() -> RampServer {
         // create a new Database, wrap in RwLock and Arc
-        let db = Arc::new(RwLock::new(Database::new()));
+        let db = RwLock::new(Database::new());
         RampServer{db:db}
     }
 }
@@ -40,8 +40,22 @@ impl ramp_interface::Server for RampServer {
             let (params, mut results) = context.get();
             let key = params.get_key().unwrap();
             let value = params.get_value().unwrap();
-            let timestamp = params.get_value().unwrap();
-            let d = self.db.write(); // hold lock till prepare is done
+
+            let deps = {
+                let target = params.get_dependencies().unwrap();
+                let size = target.len();
+                let mut entries = Vec::with_capacity(size as usize);
+                for i in 0..size {
+                    entries.push(target.get(i).unwrap().to_string());
+                }
+                entries
+            };
+
+            // let deps = params.get_dependencies().unwrap();
+            let timestamp = params.get_timestamp();
+
+            let mut db = self.db.write().unwrap(); // hold lock till prepare is done
+            db.prepare(key.to_string(), value.to_string(), deps, timestamp);
         }
 
         context.done();

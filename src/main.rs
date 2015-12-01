@@ -2,6 +2,9 @@
 extern crate capnp;
 extern crate capnp_rpc;
 
+use std::sync::mpsc::channel;
+use std::thread;
+
 use capnp::capability::{Server};
 use capnp_rpc::ez_rpc::EzRpcServer;
 
@@ -16,13 +19,25 @@ struct RampServer {
     db:i64
 }
 
+enum RampMessage {
+    // key, value, timestamp
+    Prepare(String, String, i64),
+    Commit(i64),
+    // Get(String),
+    // GetVersion(String, i64)
+}
+
 impl RampServer {
     fn new() -> RampServer {
+        // create a new Database, send into a new thread.
+        let (tx, rx) = channel::<RampMessage>();
+        // thread::spawn(move || {  });
         RampServer{db:1}
     }
+    fn listen(&self) {
+        loop {
 
-    fn listen(&mut self) {
-
+        }
     }
 }
 
@@ -32,7 +47,6 @@ impl ramp::Server for RampServer {
         let key = params.get_key().unwrap();
         let value = params.get_value().unwrap();
         let timestamp = params.get_value().unwrap();
-
     }
 
     fn commit(&mut self, mut context: ramp::CommitContext) {

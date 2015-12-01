@@ -36,10 +36,15 @@ impl RampServer {
 
 impl ramp_interface::Server for RampServer {
     fn prepare(&mut self, mut context: ramp_interface::PrepareContext) {
-        let (params, mut results) = context.get();
-        let key = params.get_key().unwrap();
-        let value = params.get_value().unwrap();
-        let timestamp = params.get_value().unwrap();
+        {
+            let (params, mut results) = context.get();
+            let key = params.get_key().unwrap();
+            let value = params.get_value().unwrap();
+            let timestamp = params.get_value().unwrap();
+            let d = self.db.write(); // hold lock till prepare is done
+        }
+
+        context.done();
     }
 
     fn commit(&mut self, mut context: ramp_interface::CommitContext) {

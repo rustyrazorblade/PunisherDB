@@ -77,6 +77,11 @@ impl ramp_interface::Server for RampServer {
         }
         context.done();
     }
+
+    fn get_version(&mut self, mut context: ramp_interface::GetVersionContext) {
+
+        context.done();
+    }
 }
 
 fn main() {

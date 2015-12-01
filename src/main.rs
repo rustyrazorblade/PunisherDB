@@ -62,7 +62,11 @@ impl ramp_interface::Server for RampServer {
     }
 
     fn commit(&mut self, mut context: ramp_interface::CommitContext) {
+        {
+            let (params, mut results) = context.get();
+        }
 
+        context.done();
     }
 }
 

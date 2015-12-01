@@ -64,6 +64,9 @@ impl ramp_interface::Server for RampServer {
     fn commit(&mut self, mut context: ramp_interface::CommitContext) {
         {
             let (params, mut results) = context.get();
+            let ts = params.get_timestamp();
+            let mut db = self.db.write().unwrap();
+            db.commit(ts);
         }
 
         context.done();

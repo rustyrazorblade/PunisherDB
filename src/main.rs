@@ -17,6 +17,8 @@ use capnp_rpc::ez_rpc::EzRpcServer;
 pub mod ramp_capnp {
   include!(concat!(env!("OUT_DIR"), "/ramp_capnp.rs"));
 }
+pub mod client;
+
 use ramp_capnp::{ramp_interface};
 
 type DB = RwLock<Database>;

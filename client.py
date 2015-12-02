@@ -13,5 +13,19 @@ if __name__  == "__main__":
     cap = client.bootstrap()
     cap = cap.cast_as(ramp_capnp.RampInterface)
 
+    k1 = str("jon")
+    v1 = str("haddad")
+
+    k2 = str("dave")
+    v2 = str("haddad")
+
+    prepared = cap.prepare(key=k1, value=v1, timestamp=1)
+    result = prepared.wait()
+    print result
+
+    cap.commit(1).wait()
+
+    result = cap.get(k1).wait()
+    print result
 
 print "done"

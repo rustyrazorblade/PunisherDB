@@ -81,8 +81,24 @@ impl ramp_interface::Server for RampServer {
             let mut db = self.db.write().unwrap();
             let version = db.get(key.to_string());
 
-            let r = results.init_result();
+            match version {
+                Some(v) => {
+                    let mut r = results.init_result();
+                    let mut ver = r.init_version();
+                    ver.set_value(&v.value);
+                    ver.set_timestamp(v.timestamp);
 
+                    let len = v.dependencies.len() as u32;
+                    let mut deps = ver.init_dependencies(len);
+                    for i in 0..len {
+                        deps.set(i as u32, &v.dependencies.get(i as usize).unwrap());
+                    }
+                },
+                None => {
+                    let mut r = results.init_result();
+                    r.set_none(());
+                }
+            };
 
         }
         context.done();

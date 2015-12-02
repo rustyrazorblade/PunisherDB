@@ -2,8 +2,8 @@
 use std::collections::{HashMap, BTreeMap};
 
 pub struct Version {
-    value: String,
-    dependencies: Vec<String>,
+    pub value: String,
+    pub dependencies: Vec<String>,
 }
 
 pub struct Item {

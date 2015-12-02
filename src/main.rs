@@ -100,9 +100,9 @@ impl ramp_interface::Server for RampServer {
             match version {
                 Some(v) => {
                     let mut r = results.init_result();
-                    let mut v = r.init_version();
-                    v.set_value("test");
-
+                    let mut ver = r.init_version();
+                    ver.set_value(&v.value);
+                    //v.set_timestamp(version.times)
 
                 },
                 None => {

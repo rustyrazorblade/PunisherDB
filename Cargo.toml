@@ -10,3 +10,4 @@ capnpc = "*"
 [dependencies]
 capnp = "0.5.2"
 capnp-rpc = "0.5.0"
+log = "*"

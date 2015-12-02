@@ -2,7 +2,7 @@
 extern crate capnp;
 extern crate capnp_rpc;
 extern crate ramp;
-
+extern crate log;
 use std::sync::mpsc::channel;
 use std::thread;
 use std::sync::{RwLock, Arc};

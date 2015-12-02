@@ -104,6 +104,8 @@ impl ramp_interface::Server for RampServer {
                     ver.set_value(&v.value);
                     ver.set_timestamp(v.timestamp);
 
+                    let deps = ver.init_dependencies(v.dependencies.len() as u32);
+
                 },
                 None => {
                     let mut r = results.init_result();

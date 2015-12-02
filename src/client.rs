@@ -16,7 +16,12 @@ struct Transaction {
 }
 
 impl Transaction {
-    fn prepare(key: &str, value: &str) {
+
+    fn new(timestamp: i64) -> Transaction {
+        Transaction{ timestamp: timestamp }
+    }
+
+    fn prepare(&mut self, key: &str, value: &str) {
 
     }
     fn commit() {

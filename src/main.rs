@@ -71,6 +71,7 @@ impl ramp_interface::Server for RampServer {
 
         context.done();
     }
+    
     fn get(&mut self, mut context: ramp_interface::GetContext) {
         {
             let (params, mut results) = context.get();

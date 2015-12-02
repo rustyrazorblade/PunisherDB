@@ -6,3 +6,9 @@ interface RampInterface {
     get @2 (key:Text) -> (value:Text, timestamp:Int64, dependencies:List(Text));
     getVersion @3 (key:Text, timestamp:Int64) -> (value:Text, timestamp:Int64, dependencies:List(Text));
 }
+
+struct Version {
+    value @0: Text;
+    timestamp @1: Int64;
+    dependencies @2: List(Text);
+}

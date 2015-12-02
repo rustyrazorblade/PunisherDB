@@ -24,9 +24,21 @@ fn main() {
             let mut builder = request.init();
             builder.set_key("test");
             builder.set_value("haddad");
+            builder.set_timestamp(1);
+            // add dependencies
         }
-        request.send();
+        let promise = request.send();
+        // println!("Response: {:?}",
+    }
+    // get request, check value
 
+    {
+        let mut request = client.commit_request();
+        {
+            let mut builder = request.init();
+            builder.set_timestamp(1);
+        }
+        let promise = request.send();
     }
 
 

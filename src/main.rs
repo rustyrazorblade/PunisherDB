@@ -43,7 +43,7 @@ impl ramp_interface::Server for RampServer {
             let (params, mut results) = context.get();
             let key = params.get_key().unwrap();
             let value = params.get_value().unwrap();
-            
+
             let deps = {
                 let target = params.get_dependencies().unwrap();
                 let size = target.len();
@@ -62,9 +62,11 @@ impl ramp_interface::Server for RampServer {
         }
 
         context.done();
+        println!("Prepared");
     }
 
     fn commit(&mut self, mut context: ramp_interface::CommitContext) {
+        println!("Committing");
         {
             let (params, mut results) = context.get();
             let ts = params.get_timestamp();

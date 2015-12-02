@@ -17,7 +17,7 @@ use capnp_rpc::ez_rpc::EzRpcServer;
 pub mod ramp_capnp {
   include!(concat!(env!("OUT_DIR"), "/ramp_capnp.rs"));
 }
-use ramp_capnp::ramp_interface;
+use ramp_capnp::{ramp_interface};
 
 type DB = RwLock<Database>;
 
@@ -67,11 +67,12 @@ impl ramp_interface::Server for RampServer {
             let ts = params.get_timestamp();
             let mut db = self.db.write().unwrap();
             db.commit(ts);
+
         }
 
         context.done();
     }
-    
+
     fn get(&mut self, mut context: ramp_interface::GetContext) {
         {
             let (params, mut results) = context.get();
@@ -79,6 +80,10 @@ impl ramp_interface::Server for RampServer {
 
             let mut db = self.db.write().unwrap();
             let version = db.get(key.to_string());
+
+            let r = results.init_result();
+
+
         }
         context.done();
     }
@@ -91,6 +96,16 @@ impl ramp_interface::Server for RampServer {
 
             let mut db = self.db.write().unwrap();
             let version = db.get_version(key.to_string(), timestamp);
+
+            match version {
+                Some(v) => {
+                    let r = results.init_result();
+
+                },
+                None => {
+
+                }
+            };
         }
 
         context.done();

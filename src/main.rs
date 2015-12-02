@@ -77,7 +77,7 @@ impl ramp_interface::Server for RampServer {
             let key = params.get_key().unwrap();
 
             let mut db = self.db.write().unwrap();
-            let item = db.get(key.to_string());
+            let version = db.get(key.to_string());
         }
         context.done();
     }
@@ -85,6 +85,11 @@ impl ramp_interface::Server for RampServer {
     fn get_version(&mut self, mut context: ramp_interface::GetVersionContext) {
         {
             let (params, mut results) = context.get();
+            let key = params.get_key().unwrap();
+            let timestamp = params.get_timestamp();
+
+            let mut db = self.db.write().unwrap();
+            let version = db.get_version(key.to_string(), timestamp);
         }
 
         context.done();

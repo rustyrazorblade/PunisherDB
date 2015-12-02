@@ -102,7 +102,7 @@ impl ramp_interface::Server for RampServer {
                     let mut r = results.init_result();
                     let mut ver = r.init_version();
                     ver.set_value(&v.value);
-                    //v.set_timestamp(version.times)
+                    ver.set_timestamp(v.timestamp);
 
                 },
                 None => {

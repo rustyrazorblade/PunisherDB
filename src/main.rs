@@ -38,6 +38,7 @@ impl RampServer {
 
 impl ramp_interface::Server for RampServer {
     fn prepare(&mut self, mut context: ramp_interface::PrepareContext) {
+        println!("Preparing");
         {
             let (params, mut results) = context.get();
             let key = params.get_key().unwrap();

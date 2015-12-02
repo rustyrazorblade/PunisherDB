@@ -17,13 +17,14 @@ fn main() {
     let mut rpc_client = EzRpcClient::new("127.0.0.1:6000").unwrap();
     let mut client : ramp_interface::Client = rpc_client.get_main();
 
-    {
+    { // this scoping is kind of ridiculous
         println!("Preparing");
         let mut request = client.prepare_request();
-
-        let mut builder = request.init();
-        builder.set_key("test");
-        builder.set_value("haddad");
+        {
+            let mut builder = request.init();
+            builder.set_key("test");
+            builder.set_value("haddad");
+        }
         request.send();
 
     }

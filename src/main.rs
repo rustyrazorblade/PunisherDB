@@ -43,7 +43,7 @@ impl ramp_interface::Server for RampServer {
             let (params, mut results) = context.get();
             let key = params.get_key().unwrap();
             let value = params.get_value().unwrap();
-
+            
             let deps = {
                 let target = params.get_dependencies().unwrap();
                 let size = target.len();

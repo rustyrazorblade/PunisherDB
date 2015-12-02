@@ -74,11 +74,18 @@ impl ramp_interface::Server for RampServer {
     fn get(&mut self, mut context: ramp_interface::GetContext) {
         {
             let (params, mut results) = context.get();
+            let key = params.get_key().unwrap();
+
+            let mut db = self.db.write().unwrap();
+            let item = db.get(key.to_string());
         }
         context.done();
     }
 
     fn get_version(&mut self, mut context: ramp_interface::GetVersionContext) {
+        {
+            let (params, mut results) = context.get();
+        }
 
         context.done();
     }
@@ -87,7 +94,11 @@ impl ramp_interface::Server for RampServer {
 fn main() {
     println!("Hello, world!");
 
-    let ramp = RampServer::new();
+    let rpc_server = EzRpcServer::new("127.0.0.1:6000").unwrap();
+
+    let ramp = Box::new(RampServer::new());
+    let ramp_server = Box::new(ramp_interface::ServerDispatch { server : ramp });
+    rpc_server.serve(ramp_server);
 
     println!("Goodbye forever.");
 }

@@ -11,6 +11,21 @@ pub mod ramp_capnp {
 
 use ramp_capnp::ramp_interface;
 
+struct Transaction {
+    timestamp: i64
+}
+
+impl Transaction {
+    fn prepare(key: &str, value: &str) {
+
+    }
+    fn commit() {
+
+    }
+
+}
+
+
 fn main() {
     println!("Starting up test");
 

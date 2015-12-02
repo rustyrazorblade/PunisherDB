@@ -3,10 +3,11 @@
 interface RampInterface {
     prepare @0 (key:Text, value:Text, dependencies:List(Text), timestamp:Int64);
     commit @1 (timestamp:Int64);
-    get @2 (key:Text) -> (value:Text, timestamp:Int64, dependencies:List(Text));
-    getVersion @3 (key:Text, timestamp:Int64) -> (value:Text, timestamp:Int64, dependencies:List(Text));
+    get @2 (key:Text) -> (result: GetResult);
+    getVersion @3 (key:Text, timestamp:Int64) -> (result: GetResult);
 }
 
+# since a Get or GetVersion call can have no result we need a union here
 struct GetResult {
     union {
         none @0 : Void;

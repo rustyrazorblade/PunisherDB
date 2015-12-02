@@ -99,11 +99,15 @@ impl ramp_interface::Server for RampServer {
 
             match version {
                 Some(v) => {
-                    let r = results.init_result();
+                    let mut r = results.init_result();
+                    let mut v = r.init_version();
+                    v.set_value("test");
+
 
                 },
                 None => {
-
+                    let mut r = results.init_result();
+                    r.set_none(());
                 }
             };
         }

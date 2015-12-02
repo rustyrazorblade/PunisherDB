@@ -7,6 +7,13 @@ interface RampInterface {
     getVersion @3 (key:Text, timestamp:Int64) -> (value:Text, timestamp:Int64, dependencies:List(Text));
 }
 
+struct GetResult {
+    union {
+        none @0 : Void;
+        version @1 : Version;
+    }
+}
+
 struct Version {
     value @0: Text;
     timestamp @1: Int64;

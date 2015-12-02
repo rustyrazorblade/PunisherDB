@@ -104,8 +104,11 @@ impl ramp_interface::Server for RampServer {
                     ver.set_value(&v.value);
                     ver.set_timestamp(v.timestamp);
 
-                    let deps = ver.init_dependencies(v.dependencies.len() as u32);
-
+                    let len = v.dependencies.len() as u32;
+                    let mut deps = ver.init_dependencies(len);
+                    for i in 0..len {
+                        deps.set(i as u32, &v.dependencies.get(i as usize).unwrap());
+                    }
                 },
                 None => {
                     let mut r = results.init_result();

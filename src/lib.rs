@@ -4,6 +4,7 @@ use std::collections::{HashMap, BTreeMap};
 pub struct Version {
     pub value: String,
     pub dependencies: Vec<String>,
+    pub timestamp: i64,
 }
 
 pub struct Item {
@@ -28,7 +29,9 @@ impl Item {
     pub fn insert(&mut self, value: String,
                   dependencies: Vec<String>,
                   timestamp: i64) {
-        let v = Version{value: value, dependencies: dependencies};
+        let v = Version{value: value,
+                        dependencies: dependencies,
+                        timestamp:timestamp };
         self.versions.insert(timestamp, v);
     }
 

@@ -11,4 +11,7 @@ pub mod ramp_capnp {
 
 fn main() {
     println!("Starting up test");
+
+    let mut rpc_client = EzRpcClient::new("127.0.0.1:6000").unwrap();
+    println!("Punisher client test ended");
 }

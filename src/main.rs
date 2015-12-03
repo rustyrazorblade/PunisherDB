@@ -1,3 +1,5 @@
+#![feature(slice_concat_ext)]
+
 extern crate ramp;
 extern crate bufstream;
 extern crate regex;
@@ -8,7 +10,7 @@ use std::sync::{RwLock, Arc};
 use std::net::{TcpListener, TcpStream};
 use std::io::{Read, BufRead, Write};
 use regex::Regex;
-
+use std::slice::SliceConcatExt;
 #[macro_use]
 extern crate log;
 extern crate env_logger;
@@ -109,9 +111,11 @@ fn handle_client(mut stream: TcpStream, mut db: DB ) {
                 match reader.get_version(key, timestamp) {
                     Some(version) => {
 
-                        let response = format!("{} {}\n",
+                        let d = version.dependencies.join(",");
+                        let response = format!("{} {} {}\n",
                                                 version.value,
-                                                version.timestamp);
+                                                version.timestamp,
+                                                d);
                         stream.write(response.as_bytes());
                     },
                     None => {
@@ -126,6 +130,25 @@ fn handle_client(mut stream: TcpStream, mut db: DB ) {
             let cap = get_current.captures(&l).unwrap();
             let key = cap.at(1).unwrap().to_string();
             // let key =
+            {
+                let mut reader = (*db).read().unwrap();
+                match reader.get(key) {
+                    Some(version) => {
+
+                        let d = version.dependencies.join(",");
+                        let response = format!("{} {} {}\n",
+                                                version.value,
+                                                version.timestamp,
+                                                d);
+                        stream.write(response.as_bytes());
+                    },
+                    None => {
+                        stream.write("NOT FOUND\n".as_bytes());
+                    }
+                };
+
+            }
+
             continue
         }
     }

@@ -16,7 +16,7 @@ Commands are terminated by a newline and are buffered internally.
 
 ## Commands
 
-### prepare <key> <value> <timestamp> <comma-separated-depencies>
+### prepare [key] [value] [timestamp] [comma-separated-depencies]
 
 Prepares a timestampped key/value pair with dependencies.
 
@@ -24,11 +24,11 @@ Prepares a timestampped key/value pair with dependencies.
 
 Commits any values associated with a timestamp.  Will not error if there aren't any values.
 
-### get <key>
+### get [key]
 
 Returns the latest committed version of a key
 
-### get <key> <timestamp>
+### get [key] [timestamp]
 
 Gets the specific version of a key.   See the blog post for why you'd need this.
 

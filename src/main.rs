@@ -4,12 +4,11 @@ extern crate log;
 use std::sync::mpsc::channel;
 use std::thread;
 use std::sync::{RwLock, Arc};
+use std::net::{TcpListener, TcpStream};
 
 use ramp::Database;
 
-// this is generated automatically as part of the build process
-// see build.rs
-type DB = RwLock<Database>;
+type DB = Arc<RwLock<Database>>;
 
 
 //
@@ -136,11 +135,29 @@ type DB = RwLock<Database>;
 //         context.done();
 //     }
 // }
+fn handle_client(mut stream: TcpStream, mut db: DB ) {
+    println!("Starting new client thread");
+}
 
 fn main() {
     println!("Starting up RAMP socket server!");
+    let db = Arc::new(RwLock::new(Database::new()));
+    let listener = TcpListener::bind("127.0.0.1:6000").unwrap();
 
+    // info!("Socket bound");
 
+    for stream in listener.incoming() {
+        // info!("connection established, spawning new thread");
+        let db2 = db.clone();
+        match stream {
+            Ok(stream) => {
+                thread::spawn(move || {
+                    handle_client(stream, db2)
+                    });
+            },
+            Err(e) => {}
+        }
+    }
 
     println!("Goodbye forever.");
 }

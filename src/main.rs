@@ -57,6 +57,7 @@ impl ramp_interface::Server for RampServer {
             // let deps = params.get_dependencies().unwrap();
             let timestamp = params.get_timestamp();
 
+            println!("Acquiring write lock");
             let mut db = self.db.write().unwrap(); // hold lock till prepare is done
             db.prepare(key.to_string(), value.to_string(), deps, timestamp);
         }
@@ -70,7 +71,10 @@ impl ramp_interface::Server for RampServer {
         {
             let (params, mut results) = context.get();
             let ts = params.get_timestamp();
+
+            println!("Acquiring write lock");
             let mut db = self.db.write().unwrap();
+            println!("Write lock acquired");
             db.commit(ts);
 
         }
@@ -88,6 +92,7 @@ impl ramp_interface::Server for RampServer {
 
             match version {
                 Some(v) => {
+                    println!("Found version {}", v.timestamp);
                     let mut r = results.init_result();
                     let mut ver = r.init_version();
                     ver.set_value(&v.value);
@@ -95,9 +100,13 @@ impl ramp_interface::Server for RampServer {
 
                     let len = v.dependencies.len() as u32;
                     let mut deps = ver.init_dependencies(len);
+
+                    println!("{} dependencies: {:?}", len, v.dependencies);
                     for i in 0..len {
+                        println!("Setting dependency {}",i);
                         deps.set(i as u32, &v.dependencies.get(i as usize).unwrap());
                     }
+                    println!("Deps set for get return");
                 },
                 None => {
                     let mut r = results.init_result();

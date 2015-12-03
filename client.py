@@ -33,10 +33,14 @@ if __name__  == "__main__":
 
     result = cap.prepare(key=k1, value="is a lovely human", timestamp=2).wait()
     cap.commit(2)
+    print "2 committed"
 
+    print "Getting k1"
     result = cap.get(k1).wait()
+
     print result
 
+    print "Getting k1 version"
     result = cap.getVersion(key=k1, timestamp=1).wait()
     print result
 

@@ -123,11 +123,14 @@ impl Database {
             // X is our Item
             // get and commit each of the transactions
             for key in x.keys.iter() {
+                println!("Checking key {}", key);
                 let item = self.items.get_mut(&key.clone()).unwrap();
                 item.current = timestamp;
             }
         }
+        println!("Cleaning up open transaction");
         self.open_transactions.remove(&timestamp);
+        println!("Transaction cleaned");
     }
 
     pub fn versions(&self, key: String) {
@@ -196,5 +199,10 @@ fn test_commit_flow() {
     assert_eq!(0, db.open_transaction_count());
 
     db.prepare("test".to_string(), "value".to_string(), deps(), 2);
+    db.commit(2);
+    {
+        let item = db.get_item("test".to_string()).unwrap();
+        assert_eq!(item.current, 2);
+    }
 
 }

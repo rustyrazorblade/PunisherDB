@@ -92,7 +92,7 @@ impl ramp_interface::Server for RampServer {
 
             match version {
                 Some(v) => {
-                    println!("Found version {}", v.timestamp);
+                    println!("Found version {} {}", v.timestamp, &v.value);
                     let mut r = results.init_result();
                     let mut ver = r.init_version();
                     ver.set_value(&v.value);

@@ -8,6 +8,7 @@ authors = ["Jon Haddad <jon@jonhaddad.com>"]
 log = "*"
 env_logger = "*"
 bufstream = "0.1"
+regex = "0.1"
 
 [[bin]]
 name = "punisher"

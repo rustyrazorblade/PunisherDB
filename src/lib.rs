@@ -194,4 +194,7 @@ fn test_commit_flow() {
 
     // once the transaction is committed we should no longer have it in the open list
     assert_eq!(0, db.open_transaction_count());
+
+    db.prepare("test".to_string(), "value".to_string(), deps(), 2);
+
 }

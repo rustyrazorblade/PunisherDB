@@ -42,7 +42,7 @@ impl Item {
     }
 
     pub fn get_version(&self, timestamp: i64) -> Option<&Version> {
-        if let Some(version) = self.versions.get(&self.current) {
+        if let Some(version) = self.versions.get(&timestamp) {
             return Some(version);
         }
         None

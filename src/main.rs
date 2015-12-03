@@ -55,6 +55,8 @@ fn handle_client(mut stream: TcpStream, mut db: DB ) {
 
     let prepare = Regex::new(r"prepare\s+([:alpha:]+)\s+([:alpha:]+)\s+(\d+)\s?([a-z,]*)").unwrap();
     let commit = Regex::new(r"commit (\d+)").unwrap();
+    let get_version = Regex::new(r"get\s+([:alpha:]+)\s+(\d+)").unwrap();
+    let get_current = Regex::new(r"get\s+([:alpha:]+)").unwrap();
 
     let mut buf = BufStream::new(stream.try_clone().unwrap());
 
@@ -96,6 +98,35 @@ fn handle_client(mut stream: TcpStream, mut db: DB ) {
                 writer.commit(timestamp);
             }
             stream.write("COMMITTED\n".as_bytes());
+            continue;
+        } else if get_version.is_match(&l) {
+            let cap = get_version.captures(&l).unwrap();
+            let key = cap.at(1).unwrap().to_string();
+            let timestamp = cap.at(2).unwrap().parse::<i64>().unwrap();
+            println!("Get version");
+            {
+                let mut reader = (*db).read().unwrap();
+                match reader.get_version(key, timestamp) {
+                    Some(version) => {
+
+                        let response = format!("{} {}\n",
+                                                version.value,
+                                                version.timestamp);
+                        stream.write(response.as_bytes());
+                    },
+                    None => {
+                        stream.write("NOT FOUND\n".as_bytes());
+                    }
+                };
+
+            }
+            continue;
+        } else if get_current.is_match(&l) {
+            println!("Get current");
+            let cap = get_current.captures(&l).unwrap();
+            let key = cap.at(1).unwrap().to_string();
+            // let key =
+            continue
         }
     }
 }

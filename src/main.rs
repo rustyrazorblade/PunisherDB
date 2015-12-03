@@ -180,11 +180,7 @@ fn handle_client(mut stream: TcpStream, mut db: DB ) {
 
     let mut buffer = String::new();
     loop {
-        // read the header - 4 bytes?
         match  buf.read_line(&mut buffer) {
-            Ok(0) => {
-                println!("no bytes received bailing out");
-            }
             Ok(bytes) => {
                 println!("ok - command received {}", bytes);
             },

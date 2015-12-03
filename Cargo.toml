@@ -6,6 +6,8 @@ authors = ["Jon Haddad <jon@jonhaddad.com>"]
 
 [dependencies]
 log = "*"
+env_logger = "*"
+bufstream = "0.1"
 
 [[bin]]
 name = "punisher"

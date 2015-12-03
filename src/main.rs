@@ -1,10 +1,17 @@
-#[macro_use]
 extern crate ramp;
-extern crate log;
+extern crate bufstream;
+
 use std::sync::mpsc::channel;
 use std::thread;
 use std::sync::{RwLock, Arc};
 use std::net::{TcpListener, TcpStream};
+use std::io::{Read, BufRead};
+
+#[macro_use]
+extern crate log;
+extern crate env_logger;
+
+use bufstream::BufStream;
 
 use ramp::Database;
 
@@ -135,16 +142,20 @@ type DB = Arc<RwLock<Database>>;
 //         context.done();
 //     }
 // }
-fn handle_client(mut stream: TcpStream, mut db: DB ) {
-    println!("Starting new client thread");
-}
 
 fn main() {
-    println!("Starting up RAMP socket server!");
+    /*
+    Logger notes:
+    RUST_LOG=error ./main
+    RUST_LOG=info
+    http://rust-lang.github.io/log/env_logger/
+    */
+
+    info!("Starting up RAMP socket server!");
     let db = Arc::new(RwLock::new(Database::new()));
     let listener = TcpListener::bind("127.0.0.1:6000").unwrap();
 
-    // info!("Socket bound");
+    info!("Socket bound");
 
     for stream in listener.incoming() {
         // info!("connection established, spawning new thread");
@@ -159,5 +170,29 @@ fn main() {
         }
     }
 
-    println!("Goodbye forever.");
+    info!("Goodbye forever.");
+}
+
+fn handle_client(mut stream: TcpStream, mut db: DB ) {
+    info!("Starting new client thread");
+
+    let mut buf = BufStream::new(stream);
+
+    let mut buffer = String::new();
+    loop {
+        // read the header - 4 bytes?
+        match  buf.read_line(&mut buffer) {
+            Ok(0) => {
+                println!("no bytes received bailing out");
+            }
+            Ok(bytes) => {
+                println!("ok - command received {}", bytes);
+            },
+            Err(_) => {
+                println!("Error, leaving");
+                return ();
+            }
+        };
+    }
+
 }

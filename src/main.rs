@@ -6,7 +6,7 @@ use std::sync::mpsc::channel;
 use std::thread;
 use std::sync::{RwLock, Arc};
 use std::net::{TcpListener, TcpStream};
-use std::io::{Read, BufRead};
+use std::io::{Read, BufRead, Write};
 use regex::Regex;
 
 #[macro_use]
@@ -178,9 +178,9 @@ fn main() {
 fn handle_client(mut stream: TcpStream, mut db: DB ) {
     info!("Starting new client thread, creating regexes");
 
-    let prepare = Regex::new(r"prepare\s+([:alpha:]+)\s+([:alpha:]+)\s+(\d+)\s?([a-z,])*").unwrap();
+    let prepare = Regex::new(r"prepare\s+([:alpha:]+)\s+([:alpha:]+)\s+(\d+)\s?([a-z,]*)").unwrap();
 
-    let mut buf = BufStream::new(stream);
+    let mut buf = BufStream::new(stream.try_clone().unwrap());
 
     let mut buffer = String::new();
     for line in buf.lines() {
@@ -192,20 +192,25 @@ fn handle_client(mut stream: TcpStream, mut db: DB ) {
             let cap = prepare.captures(&l).unwrap();
             let key = cap.at(1).unwrap();
             let value = cap.at(2).unwrap();
-            let timestamp = cap.at(3).unwrap();
+            let timestamp = cap.at(3).unwrap().parse::<i64>().unwrap();
 
             println!("Key, value, timestamp, deps: {} : {} : {} : {}",
                      key, value, timestamp, cap.at(4).unwrap());
-                     
+
             let deps : Vec<String> = cap.at(4).unwrap()
                                     .split(",").map(|x| x.to_string())
                                     .collect();
 
             println!("depencencies: {:?}", deps );
 
-            // db.prepare(cat.at(1).to_string(),
-            //            cat.at(2).to_string(),
-            //            cat.at(3) as i64);
+            {
+                let mut writer = (*db).write().unwrap();
+                writer.prepare(key.to_string(),
+                           value.to_string(),
+                           deps,
+                           timestamp);
+            }
+            stream.write("PREPARED\n".as_bytes());
             continue;
         }
     }

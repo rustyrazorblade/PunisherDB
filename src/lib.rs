@@ -106,6 +106,7 @@ impl Database {
         }
 
         let item = self.items.get_mut(&key).unwrap();
+        println!("Preparing {} with {}", key, value);
         item.insert(value, dependencies, timestamp);
     }
 

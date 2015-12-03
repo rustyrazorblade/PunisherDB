@@ -179,16 +179,9 @@ fn handle_client(mut stream: TcpStream, mut db: DB ) {
     let mut buf = BufStream::new(stream);
 
     let mut buffer = String::new();
-    loop {
-        match  buf.read_line(&mut buffer) {
-            Ok(bytes) => {
-                println!("ok - command received {}", bytes);
-            },
-            Err(_) => {
-                println!("Error, leaving");
-                return ();
-            }
-        };
+    for line in buf.lines() {
+        let l = line.unwrap();
+        println!("Line: {}", l);
     }
 
 }

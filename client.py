@@ -19,13 +19,25 @@ if __name__  == "__main__":
     k2 = str("dave")
     v2 = str("haddad")
 
-    prepared = cap.prepare(key=k1, value=v1, timestamp=1)
+    k3 = str("steve")
+    v3 = str("smith")
+
+    prepared = cap.prepare(key=k1, value=v1, timestamp=1, dependencies=[k2, k3])
     result = prepared.wait()
     print result
 
     cap.commit(1).wait()
 
     result = cap.get(k1).wait()
+    print result
+
+    result = cap.prepare(key=k1, value="is a lovely human", timestamp=2).wait()
+    cap.commit(2)
+
+    result = cap.get(k1).wait()
+    print result
+
+    result = cap.getVersion(key=k1, timestamp=1).wait()
     print result
 
 print "done"

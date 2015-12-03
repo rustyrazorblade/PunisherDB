@@ -20,7 +20,7 @@ Commands are terminated by a newline and are buffered internally.
 
 Prepares a timestampped key/value pair with dependencies.
 
-### commit <timestamp>
+### commit [timestamp]
 
 Commits any values associated with a timestamp.  Will not error if there aren't any values.
 

@@ -2,19 +2,10 @@
 name = "ramp"
 version = "0.1.0"
 authors = ["Jon Haddad <jon@jonhaddad.com>"]
-build = "build.rs"
 
-[build-dependencies]
-capnpc = "*"
 
 [dependencies]
-capnp = "0.5.2"
-capnp-rpc = "0.5.0"
 log = "*"
-
-[[bin]]
-name = "client"
-path = "src/client.rs"
 
 [[bin]]
 name = "punisher"

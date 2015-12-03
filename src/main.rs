@@ -120,6 +120,7 @@ impl ramp_interface::Server for RampServer {
 
     fn get_version(&mut self, mut context: ramp_interface::GetVersionContext) {
         {
+            println!("Getting specific version");
             let (params, mut results) = context.get();
             let key = params.get_key().unwrap();
             let timestamp = params.get_timestamp();
@@ -141,8 +142,8 @@ impl ramp_interface::Server for RampServer {
                     }
                 },
                 None => {
-                    let mut r = results.init_result();
-                    r.set_none(());
+                    // let mut r = results.init_result();
+                    // r.set_none(());
                 }
             };
         }
